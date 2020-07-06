@@ -2,7 +2,8 @@ package entidades;
 
 import java.util.ArrayList;
 
-public class Banco {
+public class Banco 
+{
 	
 	private ArrayList<Cliente> clientes;
 	
@@ -13,9 +14,9 @@ public class Banco {
 		this.clientes.add(cliente1);
 		Cliente cliente2 = new Cliente("Katniss1", "87654321", 2, 2, 2, 1000000.5, 1000000.5);
 		this.clientes.add(cliente2);
-		Cliente cliente3 = new Cliente ("ThomYork", "videotape", 3, 3, 3, 3.1415926, 2.71828);
+		Cliente cliente3 = new Cliente("ThomYork", "12121212", 3, 3, 3, 3.1415926, 2.71828);
 		this.clientes.add(cliente3);
-		Cliente cliente4 = new Cliente ("admin123", "admin123", 4, 4, 4, 1010110, 1010101);
+		Cliente cliente4 = new Cliente("adminadmin", "11111111", 4, 4, 4, 1010110, 1010101);
 		this.clientes.add(cliente4);
 		
 	}
@@ -43,6 +44,15 @@ public class Banco {
 	}
 	public Cliente buscarCliente (String user, String password)
 	{
-		
+		int arraySize = this.clientes.size();
+		int i = 0;
+		Cliente cliente = this.clientes.get(i);
+		while (!(cliente.getUsuario().equals(user) && cliente.getClave().equals(password)) && i < arraySize)
+		{
+			i++;
+			if (i < arraySize ) cliente = this.clientes.get(i); 
+		}
+		if (i == arraySize) cliente = null;
+		return cliente;
 	}
 }

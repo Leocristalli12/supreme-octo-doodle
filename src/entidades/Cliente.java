@@ -5,7 +5,7 @@ public class Cliente
 	private String usuario, clave;
 	private int id, nroCajaAhorro, nroCtaCte;
 	private double saldoCajaAhorro, saldoCtaCte;
-	
+
 	public String getUsuario() {
 		return usuario;
 	}

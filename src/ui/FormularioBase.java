@@ -2,6 +2,7 @@ package ui;
 
 import java.awt.Container;
 import java.awt.GridLayout;
+import java.awt.Desktop.Action;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -11,32 +12,63 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import entidades.Banco;
+import entidades.Cliente;
 
 public class FormularioBase extends JFrame implements ActionListener
 {
-	private JButton boton1,boton2,boton3;
+	private JButton boton1,boton2,boton3, boton4, boton5, boton6, boton7, boton8, boton9, boton10, boton11, boton12, boton13;
     private JLabel userText, claveText;
     private JTextField usuario;
     private JPasswordField clave;
-	public static void main(String[] args) 
-	{
-		FormularioBase formulario = new FormularioBase();
-		formulario.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
-	public FormularioBase() 
+    private Banco banco;
+    
+	public FormularioBase(Banco banco) 
 	{
 		super( "Log In" );
+		this.banco = banco;
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		userText = new JLabel("Usuario");
         claveText = new JLabel("Contraseña");
         usuario = new JTextField(10);
         clave = new JPasswordField(5);
-        boton1=new JButton("Aceptar");;
+        boton1 = new JButton("Aceptar");;
         boton1.addActionListener(this);
-        boton2=new JButton("Borrar");
+        boton2 = new JButton("Borrar");
         boton2.addActionListener(this);
-        boton3=new JButton("Salir");
-        boton3.addActionListener(this);  
+        boton3 = new JButton("Salir");
+        boton3.addActionListener(this);
+        boton4 = new JButton("Caja de ahorro");
+        boton4.addActionListener(this);
+        boton4.setVisible(false);
+        boton5 = new JButton("CTA CTE");
+        boton5.addActionListener(this);
+        boton5.setVisible(false);
+        boton6 = new JButton ("Pedido de saldo");
+        boton6.addActionListener(this);
+        boton6.setVisible(false);
+        boton7  = new JButton("Transferencia");
+        boton7.addActionListener(this);
+        boton7.setVisible(false);
+        boton8 = new JButton("Extracción");
+        boton8.addActionListener(this);
+        boton8.setVisible(false);
+        boton9 = new JButton("Depósito");
+        boton9.addActionListener(this);
+        boton9.setVisible(false);
+        boton10 = new JButton ("Pedido de saldo");
+        boton10.addActionListener(this);
+        boton10.setVisible(false);
+        boton11  = new JButton("Transferencia");
+        boton11.addActionListener(this);
+        boton11.setVisible(false);
+        boton12 = new JButton("Extracción");
+        boton12.addActionListener(this);
+        boton12.setVisible(false);
+        boton13 = new JButton("Depósito");
+        boton13.addActionListener(this);
+        boton13.setVisible(false);
         
         JPanel panelUsuario = new JPanel();
         panelUsuario.add(userText);
@@ -44,18 +76,34 @@ public class FormularioBase extends JFrame implements ActionListener
         JPanel panelClave = new JPanel();
         panelClave.add(claveText);
         panelClave.add(clave);
-        JPanel panelBotones = new JPanel();
-        panelBotones.add(boton1);
-        panelBotones.add(boton2);
-        panelBotones.add(boton3);
+        JPanel panelBotonesPrincipales = new JPanel();
+        panelBotonesPrincipales.add(boton1);
+        panelBotonesPrincipales.add(boton2);
+        panelBotonesPrincipales.add(boton3);
+        JPanel panelBotonesSecundarios = new JPanel();
+        panelBotonesSecundarios.add(boton4);
+        panelBotonesSecundarios.add(boton5);
+        JPanel panelBotonesDeCajaAhorro = new JPanel();
+        panelBotonesDeCajaAhorro.add(boton6);
+        panelBotonesDeCajaAhorro.add(boton7);
+        panelBotonesDeCajaAhorro.add(boton8);
+        panelBotonesDeCajaAhorro.add(boton9);
+        JPanel panelBotonesDeCTACTE = new JPanel();
+        panelBotonesDeCTACTE.add(boton10);
+        panelBotonesDeCTACTE.add(boton11);
+        panelBotonesDeCTACTE.add(boton12);
+        panelBotonesDeCTACTE.add(boton13);
         
         Container grillaContenedoraPaneles = getContentPane();
-        grillaContenedoraPaneles.setLayout(new GridLayout( 2, 3));
+        grillaContenedoraPaneles.setLayout(new GridLayout( 4, 2));
         grillaContenedoraPaneles.add(panelUsuario);
         grillaContenedoraPaneles.add(panelClave);
-        grillaContenedoraPaneles.add(panelBotones);
-        
-        setSize(250, 250);
+        grillaContenedoraPaneles.add(panelBotonesPrincipales);
+        grillaContenedoraPaneles.add(panelBotonesSecundarios);
+        grillaContenedoraPaneles.add(panelBotonesDeCajaAhorro);
+        grillaContenedoraPaneles.add(panelBotonesDeCTACTE);
+      
+        setSize(900, 900);
         setVisible(true);
                
 	}
@@ -65,17 +113,43 @@ public class FormularioBase extends JFrame implements ActionListener
 	        {
 	        	if (validarDatos())
 	        	{
-	        		
-	        		if ((String.valueOf(clave.getPassword()).equals("12345678")) && usuario.getText().equals("leonardo"))
-	        		{
-	        			desactiva();
-	        			JOptionPane.showMessageDialog(this, "Bienvenido");
-	        		}
-	        		else
+	        		Cliente elCliente = banco.buscarCliente(usuario.getText(), String.valueOf(clave.getPassword()));
+	        		if (elCliente == null )
 	        		{
 	        			JOptionPane.showMessageDialog(this, "Usuario no encontrado");
 		        		usuario.setText("");
 		                clave.setText("");
+	        		}
+	        		else
+	        		{
+	        			desactiva();
+	        			JOptionPane.showMessageDialog(this, "Bienvenido  "+elCliente.getUsuario());
+	        			this.setTitle("Menú de cuentas");
+	        			boton4.setVisible(true);
+	        			boton5.setVisible(true);
+	        			if (e.getSource()==boton4)
+	        			{
+	        				this.setTitle("Caja de ahorro");
+	        				desactiva();
+	        				boton6.setVisible(true);
+	        				boton7.setVisible(true);
+	        				boton8.setVisible(true);
+	        				boton9.setVisible(true);
+	        				if(e.getSource()==boton6)
+	        				{
+	        					JOptionPane.showMessageDialog(this, String.valueOf(elCliente.getSaldoCajaAhorro()));
+	        				}
+	        				
+	        			}
+	        			if (e.getSource()==boton5)
+	        			{
+	        				this.setTitle("CTA CTE");
+	        				desactiva();
+	        				boton10.setVisible(true);
+	        				boton11.setVisible(true);
+	        				boton12.setVisible(true);
+	        				boton13.setVisible(true);
+	        			}
 	        		}
 	        	}
 	        }
@@ -89,7 +163,6 @@ public class FormularioBase extends JFrame implements ActionListener
 	            System.exit(0);
 	        }        
 	}
-	 
 	public void desactiva()
     {
     	usuario.setVisible(false);
@@ -98,7 +171,13 @@ public class FormularioBase extends JFrame implements ActionListener
     	claveText.setVisible(false);
     	boton1.setVisible(false);
     	boton2.setVisible(false);
-    	boton3.setVisible(false);	
+    	boton3.setVisible(false);
+    	boton4.setVisible(false);
+    	boton5.setVisible(false);
+    	boton6.setVisible(false);
+    	boton7.setVisible(false);
+    	boton8.setVisible(false);
+    	boton9.setVisible(false);
     }		
 	private boolean validarDatos()
 	{
