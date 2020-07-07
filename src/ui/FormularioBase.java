@@ -2,7 +2,6 @@ package ui;
 
 import java.awt.Container;
 import java.awt.GridLayout;
-import java.awt.Desktop.Action;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -22,6 +21,7 @@ public class FormularioBase extends JFrame implements ActionListener
     private JTextField usuario;
     private JPasswordField clave;
     private Banco banco;
+    private Cliente elCliente;
     
 	public FormularioBase(Banco banco) 
 	{
@@ -103,7 +103,7 @@ public class FormularioBase extends JFrame implements ActionListener
         grillaContenedoraPaneles.add(panelBotonesDeCajaAhorro);
         grillaContenedoraPaneles.add(panelBotonesDeCTACTE);
       
-        setSize(900, 900);
+        setSize(250,250);
         setVisible(true);
                
 	}
@@ -113,7 +113,7 @@ public class FormularioBase extends JFrame implements ActionListener
 	        {
 	        	if (validarDatos())
 	        	{
-	        		Cliente elCliente = banco.buscarCliente(usuario.getText(), String.valueOf(clave.getPassword()));
+	        		elCliente = banco.buscarCliente(usuario.getText(), String.valueOf(clave.getPassword()));
 	        		if (elCliente == null )
 	        		{
 	        			JOptionPane.showMessageDialog(this, "Usuario no encontrado");
@@ -127,31 +127,81 @@ public class FormularioBase extends JFrame implements ActionListener
 	        			this.setTitle("Menú de cuentas");
 	        			boton4.setVisible(true);
 	        			boton5.setVisible(true);
-	        			if (e.getSource()==boton4)
-	        			{
-	        				this.setTitle("Caja de ahorro");
-	        				desactiva();
-	        				boton6.setVisible(true);
-	        				boton7.setVisible(true);
-	        				boton8.setVisible(true);
-	        				boton9.setVisible(true);
-	        				if(e.getSource()==boton6)
-	        				{
-	        					JOptionPane.showMessageDialog(this, String.valueOf(elCliente.getSaldoCajaAhorro()));
-	        				}
-	        				
-	        			}
-	        			if (e.getSource()==boton5)
-	        			{
-	        				this.setTitle("CTA CTE");
-	        				desactiva();
-	        				boton10.setVisible(true);
-	        				boton11.setVisible(true);
-	        				boton12.setVisible(true);
-	        				boton13.setVisible(true);
-	        			}
 	        		}
 	        	}
+	        }
+	        if (e.getSource()==boton4)
+	        {
+	        	this.setTitle("Caja de ahorro");
+	        	desactiva();
+	        	boton6.setVisible(true);
+				boton7.setVisible(true);
+				boton8.setVisible(true);
+				boton9.setVisible(true);
+	        }
+	        if (e.getSource()==boton5)
+			{
+				this.setTitle("CTA CTE");
+				desactiva();
+				boton10.setVisible(true);
+				boton11.setVisible(true);
+				boton12.setVisible(true);
+				boton13.setVisible(true);
+			}
+	        
+	        if (e.getSource()==boton6)
+	        {
+	        	JOptionPane.showMessageDialog(this,String.valueOf(elCliente.getSaldoCajaAhorro()));
+	        }
+	        if (e.getSource()==boton10)
+	        {
+	        	JOptionPane.showMessageDialog(this,String.valueOf(elCliente.getSaldoCtaCte()));
+	        }
+	        if (e.getSource()==boton7)
+	        {
+	        	if (elCliente.getSaldoCajaAhorro() > 0)
+	        	{
+	        		int monto = Integer.parseInt(JOptionPane.showInputDialog("Ingresa el monto a transferir a tu CTA CTE"));
+	        		if (elCliente.getSaldoCajaAhorro() >= monto ) banco.transferOwnCtaCte(monto, elCliente);
+	        		else JOptionPane.showMessageDialog(this, "No tiene fondo suficiente");
+	        	}
+	        	else JOptionPane.showMessageDialog(this, "No tiene fondos");
+	        }
+	        if(e.getSource()==boton11)
+	        {
+	        	if (elCliente.getSaldoCtaCte() > 0)
+	        	{
+	        		int numCtaCtebeneficiario = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de la CTA CTE a depositar"));
+	        		int posBeneficiario = banco.buscarNumCtaCte(numCtaCtebeneficiario);
+	        		if (posBeneficiario != banco.getClientesSize())
+	        		{
+	        			int monto = Integer.parseInt(JOptionPane.showInputDialog("Ingresa el monto a transferir"));
+	        			if (elCliente.getSaldoCtaCte() >= monto) banco.transferCtaCte(elCliente, monto, posBeneficiario);
+	        			else JOptionPane.showMessageDialog(this, "Fondos insuficientes");
+	        		}
+	        		else JOptionPane.showMessageDialog(this, "No existe el numero de CTA CTE ingresado");	
+	        	}
+	        	else JOptionPane.showMessageDialog(this, "No tiene fondos");
+	        }
+	        if (e.getSource()==boton8)
+	        {
+	        	if (elCliente.getSaldoCajaAhorro() > 0)
+	        	{
+	        		int monto = Integer.parseInt(JOptionPane.showInputDialog("Ingresa el monto a extraer"));
+	        		if (elCliente.getSaldoCajaAhorro() >= monto ) banco.extraccionCaja(monto, elCliente);
+	        		else JOptionPane.showMessageDialog(this, "No tiene fondo suficiente");
+	        	}
+	        	else JOptionPane.showMessageDialog(this, "No tiene fondos");
+	        }
+	        if (e.getSource()==boton12)
+	        {
+	        	if (elCliente.getSaldoCtaCte() > 0)
+	        	{
+	        		int monto = Integer.parseInt(JOptionPane.showInputDialog("Ingresa el monto a extraer"));
+	        		if (elCliente.getSaldoCtaCte() >= monto ) banco.extraccionCtaCte(monto, elCliente);
+	        		else JOptionPane.showMessageDialog(this, "No tiene fondo suficiente");
+	        	}
+	        	else JOptionPane.showMessageDialog(this, "No tiene fondos");
 	        }
 	        if (e.getSource()==boton2) 
 	        {
@@ -161,7 +211,7 @@ public class FormularioBase extends JFrame implements ActionListener
 	        if (e.getSource()==boton3) 
 	        {
 	            System.exit(0);
-	        }        
+	        }    
 	}
 	public void desactiva()
     {

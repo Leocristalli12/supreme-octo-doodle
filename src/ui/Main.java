@@ -7,8 +7,7 @@ public class Main {
 		Banco banco = new Banco();
 		banco.cargarClientesDePrueba();
 		FormularioBase formulario = new FormularioBase(banco);
-		//banco.mostrarClientes();
+		banco.mostrarClientes();
 	}
 	
 }
-

@@ -57,5 +57,5 @@ public class Cliente
 		this.saldoCajaAhorro = saldoCajaAhorro;
 		this.saldoCtaCte = saldoCtaCte;
 	}
-	
+
 }
